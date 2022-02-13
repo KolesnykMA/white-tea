@@ -22,6 +22,10 @@ jobs:
           command: sudo yarn install
 
       - run:
+          name: Build dependencies
+          command: yarn build
+
+      - run:
           name: Deploy application
           command: sls deploy
 
