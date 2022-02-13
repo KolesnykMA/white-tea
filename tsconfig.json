@@ -1,6 +1,6 @@
 {
-  "exclude": ["node_modules"],
-  "include": ["prisma"],
+  "exclude": ["node_modules", "src/**/*.test.ts"],
+  "include": ["src"],
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
