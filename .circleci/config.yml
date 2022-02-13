@@ -15,17 +15,15 @@ jobs:
 
       - run:
           name: Install Serverless CLI
-          command: npm i -g serverless
+          command: sudo npm i -g serverless
 
       - run:
           name: Install dependencies
-          command: |
-            sudo yarn install
+          command: sudo yarn install
 
       - run:
           name: Deploy application
-          command: |
-            sls deploy
+          command: sls deploy
 
       - save_cache:
           paths:
