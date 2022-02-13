@@ -1,0 +1,18 @@
+service: service-hello
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+
+functions:
+  sayHello:
+    handler: dist/lambdas/hello.hello
+    name: ${self:provider.stage}-${self:service}-sayHello
+    events:
+      - http:
+          path: /hello
+          method: get

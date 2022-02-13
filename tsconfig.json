@@ -1,0 +1,11 @@
+{
+  "exclude": ["node_modules"],
+  "include": ["prisma"],
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "strict": true
+  },
+}
