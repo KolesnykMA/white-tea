@@ -10,8 +10,10 @@ provider:
 
 functions:
   sayHello:
-    handler: dist/lambdas/hello.hello
+    handler: dist/lambdas/hello.handler
     name: sayHello
+    timeout: 5
+    memorySize: 256
     events:
       - http:
           path: /hello
