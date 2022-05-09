@@ -1,29 +1,31 @@
 version: 2.1
 
 jobs:
-  deploy:
+  deploy-staging:
     docker:
       - image: circleci/node:14
+    environment:
+      ENVIRONMENT: staging
 
     steps:
       - checkout
 
       - restore_cache:
           keys:
-            - dependencies-cache-{{ checksum "yarn.lock" }}
+            - dependencies-cache-{{ checksum "package-lock.json" }}
             - dependencies-cache
 
       - run:
           name: Install Serverless CLI
-          command: sudo npm i -g serverless
+          command: sudo npm install serverless -g
 
       - run:
           name: Install dependencies
-          command: sudo yarn install
+          command: sudo npm install --production
 
       - run:
           name: Build dependencies
-          command: yarn build
+          command: npm run build
 
       - run:
           name: Deploy application
@@ -32,9 +34,13 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: dependencies-cache-{{ checksum "yarn.lock" }}
+          key: dependencies-cache-{{ checksum "package-lock.json" }}
 
 workflows:
-  build-deploy:
+  deploy:
     jobs:
-      - deploy
+      - deploy-staging
+        filters:
+          branches:
+            only:
+              - develop

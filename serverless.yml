@@ -1,20 +1,41 @@
-service: service-hello
+service: backend
 
 frameworkVersion: '3'
 
 provider:
   name: aws
   runtime: nodejs14.x
-  stage: dev
+  stage: ${env:ENVIRONMENT}
   region: us-east-1
+  environment:
+    DATABASE_URL: ${ssm:mysql-db-url}
+
+plugins:
+  - serverless-webpack
+  - serverless-webpack-prisma
+
+custom:
+  webpack:
+    includeModules: true
 
 functions:
   sayHello:
-    handler: dist/lambdas/hello.handler
+    handler: dist/src/example/hello.handler
     name: sayHello
     timeout: 5
     memorySize: 256
     events:
       - http:
           path: /hello
+          method: get
+  getAllAccounts:
+    handler: dist/src/accounts/get-all-accounts/handler.handler
+    name: ${self:provider.stage}-${self:service}-getAllAccounts
+    tags:
+      name: getAllAccounts
+    timeout: 5
+    memorySize: 256
+    events:
+      - http:
+          path: /accounts
           method: get

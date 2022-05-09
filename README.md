@@ -10,8 +10,12 @@ sls invoke local --function sayHello
 
 ## prisma
 
-### migrations
+### create migration
 prisma migrate dev
+### reset database
+prisma migrate reset
+### open studio to view DB
+npx prisma studio
 
-### orm models
+### build orm models
 prisma generate
