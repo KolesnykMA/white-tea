@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  deploy-staging:
+  build_deploy_staging_job:
     docker:
       - image: circleci/node:14
     environment:
@@ -37,10 +37,10 @@ jobs:
           key: dependencies-cache-{{ checksum "package-lock.json" }}
 
 workflows:
-  deploy:
+  build_deploy_staging_workflow:
     jobs:
-      - deploy-staging
-        filters:
-          branches:
-            only:
-              - develop
+      - build_deploy_staging_job:
+          filters:
+            branches:
+              only:
+                - develop
