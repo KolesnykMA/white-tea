@@ -8,6 +8,7 @@ const authorize = async (
   event: APIGatewayTokenAuthorizerEvent,
   callback: Callback<DecodedToken>
 ): Promise<DecodedToken | void> => {
+  logger.debug(`Received event`, {event});
   const token = event.authorizationToken?.split(' ')[1];
   logger.debug(`Received token`, {token});
 
