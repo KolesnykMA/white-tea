@@ -9,6 +9,10 @@ jobs:
       - run:
           name: Install dependencies
           command: sudo npm install
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
       - run:
           name: Run type check
           command: npm run type-check
@@ -24,7 +28,8 @@ jobs:
     environment:
       ENVIRONMENT: staging
     steps:
-      - checkout
+      - attach_workspace:
+          at: ~/project
       - run:
           name: Install Serverless CLI
           command: sudo npm install serverless -g
