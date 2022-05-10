@@ -18,9 +18,6 @@ jobs:
       - run:
           name: Test src
           command: npm run test:src
-      - run:
-          name: Test libs
-          command: npm run test:libs
   deploy:
     docker:
       - image: circleci/node:14
