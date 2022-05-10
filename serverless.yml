@@ -22,6 +22,9 @@ custom:
 functions:
   authorize:
     handler: dist/src/auth/authorize/handler.handler
+    name: ${self:provider.stage}-${self:service}-authorize
+    tags:
+      name: authorize
 
   createAccount:
     handler: dist/src/accounts/create-account/handler.handler
