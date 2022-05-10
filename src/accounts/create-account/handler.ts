@@ -1,7 +1,9 @@
 import type {APIGatewayProxyEvent} from 'aws-lambda';
-import middy from '@middy/core';
-import validator from '@middy/validator';
 import {ulid} from 'ulid';
+import middy from '@middy/core';
+import jsonBodyParser from '@middy/http-json-body-parser';
+import validator from '@middy/validator';
+import httpErrorHandler from '@middy/http-error-handler';
 import prismaClient from '../../../libs/dal/client/client';
 import logger from '../../../libs/logger/logger';
 import inputSchema from './schema';
@@ -35,8 +37,11 @@ const createAccountHandler = async (event: Request) => {
   };
 };
 
-export const handler = middy(createAccountHandler).use(
-  validator({
-    inputSchema,
-  })
-);
+export const handler = middy(createAccountHandler)
+  .use(jsonBodyParser())
+  .use(
+    validator({
+      inputSchema,
+    })
+  )
+  .use(httpErrorHandler());

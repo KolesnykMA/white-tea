@@ -20,10 +20,12 @@
   },
   "dependencies": {
     "@middy/core": "2.5.7",
-    "@middy/validator": "^2.5.7",
+    "@middy/http-error-handler": "2.5.7",
+    "@middy/http-json-body-parser": "2.5.7",
+    "@middy/validator": "2.5.7",
     "@prisma/client": "3.13.0",
-    "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.21",
+    "jsonwebtoken": "8.5.1",
+    "lodash": "4.17.21",
     "ulid": "2.3.0",
     "winston": "3.7.2"
   },
