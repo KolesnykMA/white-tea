@@ -52,3 +52,4 @@ functions:
           authorizer:
             name: authorize
             identitySource: method.request.header.Authorization
+            type: token
