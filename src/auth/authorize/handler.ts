@@ -23,10 +23,13 @@ const authorize = async (
     return callback('Unauthorized', null);
   }
 
-  return callback(null, generateAuthResponse(decodedToken.userId, event.methodArn, decodedToken));
+  return callback(
+    null,
+    generateAuthorizerResponse(decodedToken.userId, event.methodArn, decodedToken)
+  );
 };
 
-function generateAuthResponse(principalId: string, methodArn: string, context: DecodedToken) {
+function generateAuthorizerResponse(principalId: string, methodArn: string, context: DecodedToken) {
   return {
     principalId,
     policyDocument: {

@@ -6,8 +6,6 @@ import logger, {setDefaultLoggerMeta} from '../../../libs/logger/logger';
 import type {DecodedToken} from '../../../libs/types/auth';
 
 const getUsersHandler = async (event: APIGatewayProxyEventBase<DecodedToken>) => {
-  logger.info('event', {event});
-
   const {accountId, userId, role} = event.requestContext.authorizer;
   setDefaultLoggerMeta({accountId, userId, role});
 
