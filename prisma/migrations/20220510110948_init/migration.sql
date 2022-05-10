@@ -1,31 +1,13 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `name` on the `User` table. All the data in the column will be lost.
-  - Added the required column `accountId` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `createdAt` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `firstName` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `lastName` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `passwordHash` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `role` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
--- AlterTable
-ALTER TABLE `User` DROP COLUMN `name`,
-    ADD COLUMN `accountId` VARCHAR(191) NOT NULL,
-    ADD COLUMN `createdAt` VARCHAR(191) NOT NULL,
-    ADD COLUMN `firstName` VARCHAR(191) NOT NULL,
-    ADD COLUMN `lastName` VARCHAR(191) NOT NULL,
-    ADD COLUMN `passwordHash` VARCHAR(191) NOT NULL,
-    ADD COLUMN `role` ENUM('Owner', 'Worker') NOT NULL;
-
 -- CreateTable
 CREATE TABLE `Account` (
     `id` VARCHAR(191) NOT NULL,
-    `usersCount` INTEGER NOT NULL,
-    `usersLimit` INTEGER NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `usersCount` INTEGER NOT NULL DEFAULT 0,
+    `usersLimit` INTEGER NOT NULL DEFAULT 5,
     `createdAt` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `Account_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -36,6 +18,21 @@ CREATE TABLE `Project` (
     `name` VARCHAR(191) NOT NULL,
     `createdAt` VARCHAR(191) NOT NULL,
 
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `User` (
+    `id` VARCHAR(191) NOT NULL,
+    `accountId` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `passwordHash` VARCHAR(191) NOT NULL,
+    `firstName` VARCHAR(191) NOT NULL,
+    `lastName` VARCHAR(191) NOT NULL,
+    `role` ENUM('owner', 'worker') NOT NULL,
+    `createdAt` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
