@@ -1,7 +1,7 @@
 import type {APIGatewayProxyEvent} from 'aws-lambda';
-import prismaClient from 'libs/dal/client/client';
-import logger from 'libs/logger/logger';
 import middy from '@middy/core';
+import prismaClient from '../../../libs/dal/client/client';
+import logger from '../../../libs/logger/logger';
 
 const getAllAccountsHandler = async (event: APIGatewayProxyEvent) => {
   logger.info('Received event', {event});
