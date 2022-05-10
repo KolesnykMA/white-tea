@@ -21,9 +21,6 @@ jobs:
       - run:
           name: Build project
           command: npm run build
-      - run:
-          name: Install Serverless CLI
-          command: sudo npm install serverless -g
       - persist_to_workspace:
           root: ~/project
           paths:
@@ -34,6 +31,9 @@ jobs:
     environment:
       ENVIRONMENT: staging
     steps:
+      - run:
+          name: Install Serverless CLI
+          command: sudo npm install serverless -g
       - attach_workspace:
           at: ~/project
       - run:
