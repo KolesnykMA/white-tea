@@ -4,6 +4,7 @@ import prismaClient from '../../../libs/dal/client/client';
 import logger from '../../../libs/logger/logger';
 
 const getAllAccountsHandler = async (event: APIGatewayProxyEvent) => {
+  logger.setDefaultMeta({user: 'Max'});
   logger.info('Received event', {event});
 
   const accounts = await prismaClient.account.findMany();

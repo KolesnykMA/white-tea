@@ -1,17 +1,17 @@
+import type winston from 'winston';
 import {createLogger, transports} from 'winston';
+import {merge} from 'lodash';
+
+type Logger = winston.Logger & {
+  setDefaultMeta: (meta: Record<string, unknown>) => void;
+};
 
 const logger = createLogger({
-  levels: {
-    emerg: 0,
-    alert: 1,
-    crit: 2,
-    error: 3,
-    warning: 4,
-    notice: 5,
-    info: 6,
-    debug: 7,
-  },
   transports: [new transports.Console()],
 });
 
-export default logger;
+logger.prototype.setDefaultMeta = (meta: Record<string, unknown>) => {
+  merge(logger.defaultMeta, meta);
+};
+
+export default logger as Logger;

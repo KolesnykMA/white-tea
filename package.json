@@ -21,6 +21,7 @@
   "dependencies": {
     "@middy/core": "2.5.7",
     "@prisma/client": "3.13.0",
+    "lodash": "^4.17.21",
     "ulid": "2.3.0",
     "winston": "3.7.2"
   },
@@ -30,6 +31,7 @@
     "@shelf/tsconfig": "0.0.6",
     "@types/aws-lambda": "^8.10.97",
     "@types/jest": "27.4.0",
+    "@types/lodash": "^4.14.182",
     "@types/node": "17.0.17",
     "@typescript-eslint/eslint-plugin": "5.23.0",
     "@typescript-eslint/parser": "5.23.0",
