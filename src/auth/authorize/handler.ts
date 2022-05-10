@@ -7,17 +7,15 @@ const authorize = async (
   event: APIGatewayTokenAuthorizerEvent,
   callback: Callback<DecodedToken>
 ): Promise<DecodedToken | void> => {
-  const token = event.authorizationToken.replace('Bearer ', '');
+  const token = event.authorizationToken.split(' ')[1];
 
   if (!token) {
     return callback('Unauthorized', null);
   }
 
-  const secret = Buffer.from(process.env.JWT_SECRET, 'base64');
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as DecodedToken;
 
-  const decodedToken = jwt.verify(token, secret) as DecodedToken;
-
-  if (!decodedToken || !decodedToken.accountId) {
+  if (!decodedToken.accountId || !decodedToken.userId || !decodedToken.role) {
     return callback('Unauthorized', null);
   }
 
