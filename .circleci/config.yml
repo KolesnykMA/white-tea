@@ -7,23 +7,20 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Serverless CLI
-          command: sudo npm install serverless -g
-      - run:
           name: Install dependencies
           command: sudo npm install
       - run:
           name: Run type check
-          command: sudo npm run test-check
+          command: npm run type-check
       - run:
           name: Run lint check
-          command: sudo npm run lint
+          command: npm run lint
       - run:
           name: Test src
-          command: sudo npm run test:src
+          command: npm run test:src
       - run:
           name: Test libs
-          command: sudo npm run test:libs
+          command: npm run test:libs
   deploy:
     docker:
       - image: circleci/node:14
@@ -31,6 +28,9 @@ jobs:
       ENVIRONMENT: staging
     steps:
       - checkout
+      - run:
+          name: Install Serverless CLI
+          command: sudo npm install serverless -g
       - run:
           name: Deploy application
           command: sls deploy
