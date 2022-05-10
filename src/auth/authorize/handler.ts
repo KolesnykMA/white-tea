@@ -15,7 +15,6 @@ const authorize = async (
 
   const secret = Buffer.from(process.env.JWT_SECRET, 'base64');
 
-  // verifies token
   const decodedToken = jwt.verify(token, secret) as DecodedToken;
 
   if (!decodedToken || !decodedToken.accountId) {

@@ -8,6 +8,7 @@ provider:
   stage: ${env:ENVIRONMENT}
   region: us-east-1
   environment:
+    JWT_SECRET: ${ssm:auth-jwt-secret}
     DATABASE_URL: ${ssm:mysql-db-url}
 
 plugins:
