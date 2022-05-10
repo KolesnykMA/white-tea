@@ -1,45 +1,47 @@
 version: 2.1
 
 jobs:
-  build_deploy_staging_job:
+  test:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - run:
+          name: Install Serverless CLI
+          command: sudo npm install serverless -g
+      - run:
+          name: Install dependencies
+          command: sudo npm install
+      - run:
+          name: Run type check
+          command: sudo npm run test-check
+      - run:
+          name: Run lint check
+          command: sudo npm run lint
+      - run:
+          name: Test src
+          command: sudo npm run test:src
+      - run:
+          name: Test libs
+          command: sudo npm run test:libs
+  deploy:
     docker:
       - image: circleci/node:14
     environment:
       ENVIRONMENT: staging
-
     steps:
       - checkout
-
-      - restore_cache:
-          keys:
-            - dependencies-cache-{{ checksum "package-lock.json" }}
-            - dependencies-cache
-
-      - run:
-          name: Install Serverless CLI
-          command: sudo npm install serverless -g
-
-      - run:
-          name: Install dependencies
-          command: sudo npm install
-
-      - run:
-          name: Build dependencies
-          command: npm run build
-
       - run:
           name: Deploy application
           command: sls deploy
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: dependencies-cache-{{ checksum "package-lock.json" }}
-
 workflows:
-  build_deploy_staging_workflow:
+  test_deploy:
     jobs:
-      - build_deploy_staging_job:
+      - test
+      - deploy:
+          requires:
+            - test
           filters:
             branches:
               only:

@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "outDir": "./dist"
   },
-  "exclude": ["node_modules", "src/**/*.test.ts"],
+  "exclude": ["node_modules", "src/**/*.test.ts", "libs/**/*.test.ts"],
   "extends": "@shelf/tsconfig/backend",
   "include": ["src"],
 }
