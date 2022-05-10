@@ -23,8 +23,10 @@ type Request = APIGatewayProxyEvent & {
 
 const createAccountHandler = async (event: Request) => {
   const {name, email, password, firstName, lastName} = event.body;
+  logger.info(`Received input`, {body: event.body});
 
-  const existingUser = await prisma.user.findUnique({where: {email: email}});
+  const existingUser = await prisma.user.findUnique({where: {email}});
+  logger.info(`Fetched user by email`, {existingUser});
 
   if (existingUser) {
     throw createHttpError(409, `User with email already exists`);
@@ -46,6 +48,7 @@ const createAccountHandler = async (event: Request) => {
     const userId = ulid();
     const role = 'owner';
     const passwordHash: string = await bcrypt.hash(password, 13);
+    logger.info(`Created password`);
 
     const user = await prisma.user.create({
       data: {
