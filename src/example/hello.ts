@@ -1,6 +1,7 @@
-import { ulid } from "ulid";
+import {ulid} from 'ulid';
+import type {APIGatewayProxyCallback} from 'aws-lambda';
 
-export const handler = async (event: any, context: any, callback: any) => {
+export const handler = async (callback: APIGatewayProxyCallback) => {
   const response = {
     statusCode: 200,
     body: JSON.stringify({
