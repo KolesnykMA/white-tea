@@ -5,7 +5,7 @@ import jsonBodyParser from '@middy/http-json-body-parser';
 import validator from '@middy/validator';
 import httpErrorHandler from '@middy/http-error-handler';
 import prismaClient from '../../../libs/dal/client/client';
-import logger from '../../../libs/logger/logger';
+import logger, {setDefaultLoggerMeta} from '../../../libs/logger/logger';
 import inputSchema from './schema';
 
 type Request = APIGatewayProxyEvent & {
@@ -16,7 +16,7 @@ type Request = APIGatewayProxyEvent & {
 };
 
 const createAccountHandler = async (event: Request) => {
-  logger.defaultMeta = {user: 'Kolesnyk'};
+  setDefaultLoggerMeta({user: 'Kolesnyk'});
 
   const {name, email} = event.body;
 
