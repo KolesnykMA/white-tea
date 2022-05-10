@@ -25,15 +25,15 @@ const createAccountHandler = async (event: Request) => {
   const {name, email, password, firstName, lastName} = event.body;
   logger.info(`Received input`, {body: event.body});
 
-  const existingUser = await prisma.user.findUnique({where: {email}});
-  logger.info(`Fetched user by email`, {existingUser});
-
-  if (existingUser) {
-    throw createHttpError(409, `User with email already exists`);
-  }
-
   // @ts-ignore
   await prisma.$transaction(async prisma => {
+    const existingUser = await prisma.user.findUnique({where: {email}});
+    logger.info(`Fetched user by email`);
+
+    if (existingUser) {
+      throw createHttpError(409, `User with email already exists`);
+    }
+
     const accountId = ulid();
     const account = await prisma.account.create({
       data: {
