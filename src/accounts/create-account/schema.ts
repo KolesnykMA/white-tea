@@ -5,12 +5,12 @@ export default {
       type: 'object',
       properties: {
         name: {type: 'string'},
-        firstName: {type: 'string'},
-        lastName: {type: 'string'},
         email: {type: 'string'},
         password: {type: 'string'},
+        firstName: {type: 'string'},
+        lastName: {type: 'string'},
       },
-      required: ['name', 'email'],
+      required: ['name', 'email', 'password', 'firstName', 'lastName'],
     },
   },
 };

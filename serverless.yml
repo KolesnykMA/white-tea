@@ -40,7 +40,7 @@ functions:
     name: ${self:provider.stage}-${self:service}-getUsers
     tags:
       name: getUsers
-    timeout: 10
+    timeout: 20
     memorySize: 128
     events:
       - http:
