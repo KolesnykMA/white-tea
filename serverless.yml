@@ -5,7 +5,7 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs14.x
-  stage: ${env:ENVIRONMENT}
+  stage: staging #${env:ENVIRONMENT}
   region: us-east-1
   environment:
     JWT_SECRET: ${ssm:auth-jwt-secret}
