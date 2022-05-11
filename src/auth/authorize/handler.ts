@@ -4,13 +4,15 @@ import type {
   APIGatewayAuthorizerWithContextCallback,
   APIGatewayTokenAuthorizerEvent,
 } from 'aws-lambda/trigger/api-gateway-authorizer';
-import type {DecodedToken} from '../../../libs/types/auth';
+import type {AuthorizerContext, DecodedToken} from '../../../libs/types/auth';
+import prisma from '../../../libs/dal/client/client';
+import logger from '../../../libs/logger/logger';
 
 const authorize = async (
   event: APIGatewayTokenAuthorizerEvent,
-  context: Context,
-  callback: APIGatewayAuthorizerWithContextCallback<DecodedToken>
-): Promise<APIGatewayAuthorizerWithContextCallback<DecodedToken> | void> => {
+  _: Context,
+  callback: APIGatewayAuthorizerWithContextCallback<AuthorizerContext>
+): Promise<APIGatewayAuthorizerWithContextCallback<AuthorizerContext> | void> => {
   const token = event.authorizationToken?.split(' ')[1];
 
   if (!token) {
@@ -18,18 +20,53 @@ const authorize = async (
   }
 
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as DecodedToken;
+  const tokenIsValid = validateDecodedToken(decodedToken);
 
-  if (!decodedToken.accountId || !decodedToken.userId || !decodedToken.role) {
+  if (!tokenIsValid) {
     return callback('Unauthorized', null);
   }
 
+  const {accountId, userId, role} = decodedToken;
+
+  const [account, user] = await Promise.all([
+    prisma.account.findUnique({
+      where: {
+        id: accountId,
+      },
+    }),
+    prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    }),
+  ]);
+  logger.info(`Fetched account and user`);
+
+  if (!account || !user) {
+    return callback('Unauthorized', null);
+  }
+
+  const authorizerContext = {
+    accountId,
+    userId,
+    role,
+  };
+
   return callback(
     null,
-    generateAuthorizerResponse(decodedToken.userId, event.methodArn, decodedToken)
+    generateAuthorizerResponse(decodedToken.userId, event.methodArn, authorizerContext)
   );
 };
 
-function generateAuthorizerResponse(principalId: string, methodArn: string, context: DecodedToken) {
+function validateDecodedToken(decodedToken: DecodedToken): boolean {
+  return !(!decodedToken.accountId || !decodedToken.userId || !decodedToken.role);
+}
+
+function generateAuthorizerResponse(
+  principalId: string,
+  methodArn: string,
+  context: AuthorizerContext
+) {
   return {
     principalId,
     policyDocument: {

@@ -15,7 +15,7 @@ model Account {
   email             String      @unique
   usersCount        Int         @default(0)
   usersLimit        Int         @default(5)
-  createdAt         String
+  createdAt         DateTime    @default(now())
 
   users             User[]
   projects          Project[]
@@ -23,12 +23,11 @@ model Account {
 
 model Project {
   id                String      @id
+  name              String
+  createdAt         DateTime    @default(now())
 
   account           Account     @relation(fields: [accountId], references: [id])
   accountId         String
-
-  name              String
-  createdAt         String
 
   features          Feature[]
   tasks             Task[]
@@ -36,16 +35,15 @@ model Project {
 
 model User {
   id                String      @id
-
-  account           Account     @relation(fields: [accountId], references: [id])
-  accountId         String
-
   email             String      @unique
   passwordHash      String
   firstName         String
   lastName          String
   role              UserRole
-  createdAt         String
+  createdAt         DateTime    @default(now())
+
+  account           Account     @relation(fields: [accountId], references: [id])
+  accountId         String
 
   createdTasks      Task[]      @relation("creator")
   tasksToExecute    Task[]      @relation("executive")
@@ -59,18 +57,21 @@ enum UserRole {
 
 model Feature {
   id                String      @id
+  name              String
+  createdAt         DateTime    @default(now())
 
   project           Project     @relation(fields: [projectId], references: [id])
   projectId         String
-
-  name              String
-  createdAt         String
 
   tasks             Task[]
 }
 
 model Task {
   id                String      @id
+  title             String
+  status            TaskStatus
+  updatedAt         DateTime    @default(now())
+  createdAt         DateTime    @default(now())
 
   project           Project     @relation(fields: [projectId], references: [id])
   projectId         String
@@ -81,16 +82,14 @@ model Task {
   release           Release?    @relation(fields: [releaseId], references: [id])
   releaseId         String?
 
-  creator           User?       @relation("creator", fields: [creatorId], references: [id])
-  creatorId         String?
+  creator           User        @relation("creator", fields: [creatorId], references: [id])
+  creatorId         String
 
   executive         User?       @relation("executive", fields: [executiveId], references: [id])
   executiveId       String?
 
   tester            User?       @relation("tester", fields: [testerId], references: [id])
   testerId          String?
-
-  status            TaskStatus
 }
 enum TaskStatus {
   Backlog
@@ -108,6 +107,7 @@ enum TaskStatus {
 model Comment {
   id                String      @id
   text              String
+  createdAt         DateTime    @default(now())
 
   user              User        @relation(fields: [comentatorId], references: [id])
   comentatorId      String
@@ -117,8 +117,8 @@ model Release {
   id                String      @id
   name              String
   description       String?
-  releaseDate       String
-  releasedAt        String?
+  releaseDate       DateTime
+  releasedAt        DateTime?
 
   tasks Task[]
 }
