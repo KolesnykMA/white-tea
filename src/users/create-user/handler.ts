@@ -8,7 +8,7 @@ import prisma from '../../../libs/dal/client/client';
 import logger, {setDefaultLoggerMeta} from '../../../libs/logger/logger';
 import inputSchema from '../../accounts/create-account/schema';
 import type {AuthorizerContext} from '../../../libs/types/auth';
-import {createPasswordHash} from '../../../libs/auth/password/hasher';
+import {createPasswordHash} from '../../../libs/auth/password-hasher';
 import {validate} from './validate';
 
 type Request = APIGatewayProxyEventBase<AuthorizerContext> & {

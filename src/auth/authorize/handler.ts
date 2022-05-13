@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import type {Context} from 'aws-lambda/handler';
 import type {
   APIGatewayAuthorizerWithContextCallback,
@@ -7,6 +6,7 @@ import type {
 import type {AuthorizerContext, DecodedToken} from '../../../libs/types/auth';
 import prisma from '../../../libs/dal/client/client';
 import logger from '../../../libs/logger/logger';
+import {verifyToken} from '../../../libs/auth/jwt';
 
 const authorize = async (
   event: APIGatewayTokenAuthorizerEvent,
@@ -19,10 +19,9 @@ const authorize = async (
     return callback('Unauthorized', null);
   }
 
-  const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as DecodedToken;
-  const tokenIsValid = validateDecodedToken(decodedToken);
+  const decodedToken = await verifyToken(token, process.env.JWT_SECRET);
 
-  if (!tokenIsValid) {
+  if (!validateDecodedToken(decodedToken)) {
     return callback('Unauthorized', null);
   }
 

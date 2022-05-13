@@ -6,9 +6,9 @@ import validator from '@middy/validator';
 import httpErrorHandler from '@middy/http-error-handler';
 import prisma from '../../../libs/dal/client/client';
 import logger from '../../../libs/logger/logger';
-import {signToken} from '../../auth/login/service';
+import {signToken} from '../../../libs/auth/jwt';
 import inputSchema from './schema';
-import {createPasswordHash} from '../../../libs/auth/password/hasher';
+import {createPasswordHash} from '../../../libs/auth/password-hasher';
 import {validate} from './validate';
 
 type Request = APIGatewayProxyEvent & {
@@ -50,7 +50,7 @@ const createAccountHandler = async (event: Request) => {
   });
   logger.info(`Created account with related owner user`);
 
-  const token = await signToken({accountId, userId, role});
+  const token = await signToken({accountId, userId, role}, process.env.JWT_SECRET);
   logger.info(`Created token`);
 
   return {

@@ -6,9 +6,9 @@ import validator from '@middy/validator';
 import httpErrorHandler from '@middy/http-error-handler';
 import prisma from '../../../libs/dal/client/client';
 import logger from '../../../libs/logger/logger';
-import {signToken} from './service';
+import {signToken} from '../../../libs/auth/jwt';
 import inputSchema from './schema';
-import {verifyPasswordHash} from '../../../libs/auth/password/hasher';
+import {verifyPasswordHash} from '../../../libs/auth/password-hasher';
 
 type Request = APIGatewayProxyEvent & {
   body: {
@@ -31,7 +31,10 @@ const loginHandler = async (event: Request) => {
     throw createHttpError(401, 'Invalid credentials');
   }
 
-  const token = await signToken({accountId: user.accountId, userId: user.id, role: user.role});
+  const token = await signToken(
+    {accountId: user.accountId, userId: user.id, role: user.role},
+    process.env.JWT_SECRET
+  );
   logger.info(`Created token`);
 
   return {
