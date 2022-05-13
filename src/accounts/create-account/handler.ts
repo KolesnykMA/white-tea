@@ -1,7 +1,5 @@
-import bcrypt from 'bcrypt';
 import type {APIGatewayProxyEvent} from 'aws-lambda';
 import {ulid} from 'ulid';
-import createHttpError from 'http-errors';
 import middy from '@middy/core';
 import jsonBodyParser from '@middy/http-json-body-parser';
 import validator from '@middy/validator';
@@ -10,6 +8,8 @@ import prisma from '../../../libs/dal/client/client';
 import logger from '../../../libs/logger/logger';
 import {signToken} from '../../auth/login/service';
 import inputSchema from './schema';
+import {createPasswordHash} from '../../../libs/auth/password/hasher';
+import {validate} from './validate';
 
 type Request = APIGatewayProxyEvent & {
   body: {
@@ -25,35 +25,25 @@ const createAccountHandler = async (event: Request) => {
   const {name, email, password, firstName, lastName} = event.body;
   logger.info(`Received input`, {body: event.body});
 
-  const existingUser = await prisma.user.findUnique({where: {email}});
-  logger.info(`Fetched user by email`);
-
-  if (existingUser) {
-    throw createHttpError(409, `User with email already exists`);
-  }
+  await validate(email);
 
   const accountId = ulid();
   const userId = ulid();
   const role = 'owner';
-
-  const passwordHash: string = await bcrypt.hash(password, 13);
-  logger.info(`Created password`);
 
   const account = await prisma.account.create({
     data: {
       id: accountId,
       name,
       email,
-      createdAt: new Date().toISOString(),
       users: {
         create: {
           id: userId,
           email,
-          passwordHash,
+          passwordHash: await createPasswordHash(password),
           firstName,
           lastName,
           role,
-          createdAt: new Date().toISOString(),
         },
       },
     },

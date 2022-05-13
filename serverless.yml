@@ -28,6 +28,14 @@ functions:
     timeout: 10
     memorySize: 128
 
+  login:
+    handler: dist/src/auth/login/handler.handler
+    name: ${self:provider.stage}-${self:service}-login
+    tags:
+      name: login
+    timeout: 10
+    memorySize: 128
+
   createAccount:
     handler: dist/src/accounts/create-account/handler.handler
     name: ${self:provider.stage}-${self:service}-createAccount
@@ -40,6 +48,22 @@ functions:
           path: /accounts
           method: post
 
+  createUser:
+    handler: dist/src/users/create-user/handler.handler
+    name: ${self:provider.stage}-${self:service}-createUser
+    tags:
+      name: createUser
+    timeout: 15
+    memorySize: 128
+    events:
+      - http:
+          path: /users
+          method: post
+          authorizer:
+            name: authorize
+            identitySource: method.request.header.Authorization
+            type: token
+
   getUsers:
     handler: dist/src/users/get-users/handler.handler
     name: ${self:provider.stage}-${self:service}-getUsers
@@ -51,6 +75,74 @@ functions:
       - http:
           path: /users
           method: get
+          authorizer:
+            name: authorize
+            identitySource: method.request.header.Authorization
+            type: token
+
+  createProject:
+    handler: dist/src/projects/create-project/handler.handler
+    name: ${self:provider.stage}-${self:service}-createProject
+    tags:
+      name: createProject
+    timeout: 15
+    memorySize: 128
+    events:
+      - http:
+          path: /projects
+          method: post
+          authorizer:
+            name: authorize
+            identitySource: method.request.header.Authorization
+            type: token
+
+  getProjects:
+    handler: dist/src/projects/get-projects/handler.handler
+    name: ${self:provider.stage}-${self:service}-getProjects
+    tags:
+      name: getProjects
+    timeout: 10
+    memorySize: 128
+    events:
+      - http:
+          path: /projects
+          method: get
+          authorizer:
+            name: authorize
+            identitySource: method.request.header.Authorization
+            type: token
+
+  getProject:
+    handler: dist/src/projects/get-project/handler.handler
+    name: ${self:provider.stage}-${self:service}-getProject
+    tags:
+      name: getProject
+    timeout: 10
+    memorySize: 128
+    events:
+      - http:
+          path: /projects/{projectId}
+          method: get
+          request:
+            parameters:
+              paths:
+                projectId: true
+          authorizer:
+            name: authorize
+            identitySource: method.request.header.Authorization
+            type: token
+
+  createTask:
+    handler: dist/src/tasks/create-task/handler.handler
+    name: ${self:provider.stage}-${self:service}-createTask
+    tags:
+      name: createTask
+    timeout: 15
+    memorySize: 128
+    events:
+      - http:
+          path: /tasks
+          method: post
           authorizer:
             name: authorize
             identitySource: method.request.header.Authorization

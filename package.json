@@ -4,7 +4,6 @@
   "main": "index.js",
   "repository": "https://github.com/KolesnykMA/white-tea.git",
   "author": "KolesnykMA <maxymura@gmail.com>",
-  "license": "MIT",
   "scripts": {
     "test:src": "jest src",
     "build": "tsc --build",

@@ -13,9 +13,10 @@ model Account {
   id                String      @id
   name              String
   email             String      @unique
-  usersCount        Int         @default(0)
+  usersCount        Int         @default(1)
   usersLimit        Int         @default(5)
   createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @default(now())
 
   users             User[]
   projects          Project[]
@@ -25,12 +26,15 @@ model Project {
   id                String      @id
   name              String
   createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @default(now())
 
   account           Account     @relation(fields: [accountId], references: [id])
   accountId         String
 
   features          Feature[]
   tasks             Task[]
+
+  @@unique([accountId, name])
 }
 
 model User {
@@ -41,13 +45,13 @@ model User {
   lastName          String
   role              UserRole
   createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @default(now())
 
   account           Account     @relation(fields: [accountId], references: [id])
   accountId         String
 
   createdTasks      Task[]      @relation("creator")
   tasksToExecute    Task[]      @relation("executive")
-  tasksToTest       Task[]      @relation("tester")
   comments          Comment[]
 }
 enum UserRole {
@@ -58,20 +62,26 @@ enum UserRole {
 model Feature {
   id                String      @id
   name              String
+  startDate         DateTime
+  dueDate           DateTime
   createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @default(now())
 
   project           Project     @relation(fields: [projectId], references: [id])
   projectId         String
 
   tasks             Task[]
+
+   @@unique([projectId, name])
 }
 
 model Task {
   id                String      @id
   title             String
-  status            TaskStatus
-  updatedAt         DateTime    @default(now())
+  status            TaskStatus  @default(todo)
+  contentUrl        String?
   createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @default(now())
 
   project           Project     @relation(fields: [projectId], references: [id])
   projectId         String
@@ -87,27 +97,18 @@ model Task {
 
   executive         User?       @relation("executive", fields: [executiveId], references: [id])
   executiveId       String?
-
-  tester            User?       @relation("tester", fields: [testerId], references: [id])
-  testerId          String?
 }
 enum TaskStatus {
-  Backlog
-  Prioritized
-  Todo
-  InProgress
-  Resolved
-  Deployed
-  InTest
-  OnReview
-  Done
-  Released
+  todo
+  inProgress
+  done
 }
 
 model Comment {
   id                String      @id
   text              String
   createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @default(now())
 
   user              User        @relation(fields: [comentatorId], references: [id])
   comentatorId      String
@@ -119,6 +120,8 @@ model Release {
   description       String?
   releaseDate       DateTime
   releasedAt        DateTime?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @default(now())
 
   tasks Task[]
 }

@@ -54,7 +54,11 @@ const authorize = async (
 
   return callback(
     null,
-    generateAuthorizerResponse(decodedToken.userId, event.methodArn, authorizerContext)
+    generateAuthorizerResponse({
+      principalId: decodedToken.userId,
+      methodArn: event.methodArn,
+      context: authorizerContext,
+    })
   );
 };
 
@@ -62,11 +66,15 @@ function validateDecodedToken(decodedToken: DecodedToken): boolean {
   return !(!decodedToken.accountId || !decodedToken.userId || !decodedToken.role);
 }
 
-function generateAuthorizerResponse(
-  principalId: string,
-  methodArn: string,
-  context: AuthorizerContext
-) {
+function generateAuthorizerResponse({
+  principalId,
+  methodArn,
+  context,
+}: {
+  principalId: string;
+  methodArn: string;
+  context: AuthorizerContext;
+}) {
   return {
     principalId,
     policyDocument: {
