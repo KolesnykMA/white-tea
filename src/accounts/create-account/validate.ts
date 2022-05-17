@@ -4,7 +4,7 @@ import logger from '../../../libs/logger/logger';
 
 export async function validate(email: string) {
   const existingUser = await prisma.user.findUnique({where: {email}});
-  logger.info(`Fetched user by email`);
+  logger.info(`Fetched user by his email`);
 
   if (existingUser) {
     throw createHttpError(400, `User with email already exists`);
