@@ -20,7 +20,6 @@ type Request = APIGatewayProxyEvent & {
 const loginHandler = async (event: Request) => {
   const {email, password} = event.body;
   logger.info(`Received input`, {body: event.body});
-
   const user = await prisma.user.findUnique({where: {email: email}});
 
   if (!user) {
@@ -42,7 +41,6 @@ const loginHandler = async (event: Request) => {
     body: JSON.stringify({token}),
   };
 };
-
 export const handler = middy(loginHandler)
   .use(jsonBodyParser())
   .use(

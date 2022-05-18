@@ -4,8 +4,8 @@ export default {
     body: {
       type: 'object',
       properties: {
-        email: {type: 'string', minLength: 1, maxLength: 20},
-        password: {type: 'string', minLength: 1, maxLength: 20},
+        email: {type: 'string', format: 'email'},
+        password: {type: 'string', minLength: 8, maxLength: 30},
       },
       required: ['email', 'password'],
     },
