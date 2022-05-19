@@ -41,6 +41,7 @@ const loginHandler = async (event: Request) => {
     body: JSON.stringify({token}),
   };
 };
+
 export const handler = middy(loginHandler)
   .use(jsonBodyParser())
   .use(
