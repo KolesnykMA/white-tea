@@ -15,9 +15,9 @@ jobs:
       - run:
           name: Run lint check
           command: npm run lint
-#      - run:
-#          name: Test src
-#          command: npm run test:src
+      - run:
+          name: Test src
+          command: npm run test:src
       - run:
           name: Build project
           command: npm run build

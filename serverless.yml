@@ -52,6 +52,22 @@ functions:
           path: /accounts
           method: post
 
+  getAccount:
+    handler: dist/src/account/get-account/handler.handler
+    name: ${self:provider.stage}-${self:service}-getAccount
+    tags:
+      name: getAccount
+    timeout: 15
+    memorySize: 128
+    events:
+      - http:
+          path: /accounts
+          method: get
+          authorizer:
+            name: authorize
+            identitySource: method.request.header.Authorization
+            type: token
+
   createUser:
     handler: dist/src/users/create-user/handler.handler
     name: ${self:provider.stage}-${self:service}-createUser
