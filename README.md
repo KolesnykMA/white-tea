@@ -1,12 +1,5 @@
-# white-tea
-
-## serverless
-
-### deploy
-sls deploy
-
-### test lambda
-sls invoke local --function sayHello
+# serverless-jira-clone
+Jira clone build with serverless approach using AWS
 
 ## prisma
 ### create migration
